@@ -1,0 +1,9 @@
+name: Custom
+type: module
+description: Alter the existing Drupal Site Information form.
+core: '8.x'
+version: '8.x-1.x-dev'
+package: 'Custom Modules'
+
+dependencies:
+  - drupal:serialization

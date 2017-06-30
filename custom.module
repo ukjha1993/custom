@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * Implements hook_form_alter().
+ *
+ */
+function custom_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id){
+
+if ($form_id == 'system_site_information_settings') {
+    $siteapikey = \Drupal::config('custom.config')->get('siteapikey');
+
+    // Add Site API Key textfield.
+    $form['siteapikey'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Site API Key'),
+      '#default_value' => isset($siteapikey) ? $siteapikey : t('No API Key yet'),
+    );
+
+    // Add a custom submit handler & submit text.
+    $form['actions']['submit']['#value'] = t('Update configuration');
+    $form['#submit'][] = 'system_site_information_settings_custom_submit';  
+  }
+}
+
+
+/**
+  * Custom Submit callback for system_site_information_settings_form.
+  *
+  *
+  */
+function system_site_information_settings_custom_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state){
+  $siteapikey = $form_state->getValue('siteapikey');
+
+  // store siteapikey in config variable
+  \Drupal::configFactory()->getEditable('custom.config')->set('siteapikey', $siteapikey)->save();
+
+  // set message after saved the Site API Key
+  drupal_set_message(t("$siteapikey have been saved in Site API Key."));
+}
